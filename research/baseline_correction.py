@@ -31,20 +31,26 @@ def baseline_als(y, lam, p, niter=10):
 
 
 #csvファイルと図を出力します
-def outFigCSV(x,y):
+def outFigCSV(x,y1,y2,y3):
 
-    # baseline estimation and smoothing
-    Y_np = np.array(y)
-    bkg = baseline_als(Y_np,paramAsLS[0], paramAsLS[1])
-    fix = Y_np - bkg
+    # baseline estimation
+    Y_np1 = np.array(y1)
+    bkg1 = baseline_als(Y_np1,paramAsLS[0], paramAsLS[1])
+    fix1 = Y_np1 - bkg1
+    Y_np2 = np.array(y2)
+    bkg2 = baseline_als(Y_np2,paramAsLS[0], paramAsLS[1])
+    fix2 = Y_np2 - bkg2
+    Y_np3 = np.array(y3)
+    bkg3 = baseline_als(Y_np3,paramAsLS[0], paramAsLS[1])
+    fix3 = Y_np3 - bkg3
 
     input_data = input('plottype: t = transmittance, a = absorbance, s = singlebeam = ')
     
     if input_data == 'a':
-        pl.Abs(x,y,bkg,fix)
+        pl.Abs(x,fix1,fix2,fix3)
     if input_data == 't':
-        pl.Trans(x,y)
+        pl.Trans(x,fix1,fix2,fix3)
     if input_data == 's':
-        pl.Single(x,y)
+        pl.Single(x,fix1,fix2,fix3)
     else :
         print("input a or t or s")
