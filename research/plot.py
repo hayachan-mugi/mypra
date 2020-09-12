@@ -20,9 +20,13 @@ def Single(x1,y1,y2,y3):
 
 def Trans(x,y1,y2,y3):
     #fig = plt.figure()
-    #plt.plot(x,y1,color='black',  linestyle='solid', linewidth = 2.0, label='vacant')
-    plt.plot(x,y1,color='red',  linestyle='solid', linewidth = 2.0, label='Spacer:12um')
-    plt.scatter(y2,y3)
+    plt.plot(x,y1,color='black',  linestyle='solid', linewidth = 2.0, label='original data')
+    input_data = input('if you input the [f] , you can get fitting graph. other = fsr graph : ')
+    
+    if input_data == 'f':
+        plt.plot(x,y2,color='red',  linestyle='solid', linewidth = 2.0, label='fitting data')
+    else :
+        plt.scatter(y2,y3)
     plt.title('Potassium Hexacyanoferrate',fontsize=16)
     plt.xlabel('Wave Number [cm-1]',fontsize=16) 
     plt.ylabel('Transmittance [%]',fontsize=16) 
@@ -55,3 +59,19 @@ def Abs(x1,y1,y2,y3):
     ax2.legend()
     plt.show()
     #fig.savefig(os.path.join(save_dir, '0910_A_PH3+water.png'))
+
+def Check(x1,y1,y2,y3):
+    #fig = plt.figure()
+    plt.plot(x1,y1,color='red',  linestyle='solid', linewidth = 2.0, label='original data')
+    plt.plot(x1,y2,color='black',  linestyle='solid', linewidth = 2.0, label='fixed data')
+    plt.plot(x1,y3,color='g',  linestyle='--', linewidth = 1.0, label='baseline')
+    #plt.scatter(y2,y3)
+    #plt.title('Potassium Hexacyanoferrate',fontsize=16)
+    plt.xlabel('Wave Number [cm-1]',fontsize=16) 
+    plt.ylabel('Transmittance [%]',fontsize=16) 
+    plt.xlim()
+    plt.ylim()
+    plt.grid(color='b', linestyle='--', linewidth=0.2)
+    plt.legend()
+    plt.show()
+    #fig.savefig(os.path.join(save_dir, '0910_T_PH3+water.png')) #plt.saveig()でグラフを保存 #これで別ディレクトリsave_dir内にグラフ'hoge.png'が保存された
