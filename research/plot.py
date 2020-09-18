@@ -20,11 +20,12 @@ def Single(x1,y1,y2,y3):
 
 def Trans(x,y1,y2,y3):
     #fig = plt.figure()
-    plt.plot(x,y1,color='black',  linestyle='solid', linewidth = 2.0, label='original data')
+    plt.plot(x,y1,color='black',  linestyle='solid', linewidth = 2.0, label='12original data')
     input_data = input('if you input the [f] , you can get fitting graph. other = fsr graph : ')
     
     if input_data == 'f':
-        plt.plot(x,y2,color='red',  linestyle='solid', linewidth = 2.0, label='fitting data')
+        plt.plot(x,y2,color='red',  linestyle='solid', linewidth = 2.0, label='10fitting data')
+        plt.plot(x,y3,color='b',  linestyle='solid', linewidth = 2.0, label='8fitting data')
     else :
         plt.scatter(y2,y3)
     plt.title('Potassium Hexacyanoferrate',fontsize=16)
@@ -35,7 +36,7 @@ def Trans(x,y1,y2,y3):
     plt.grid(color='b', linestyle='--', linewidth=0.2)
     plt.legend()
     plt.show()
-    #fig.savefig(os.path.join(save_dir, '0910_T_PH3+water.png')) #plt.saveig()でグラフを保存 #これで別ディレクトリsave_dir内にグラフ'hoge.png'が保存された
+    #fig.savefig(os.path.join(save_dir, '0915_T_vacant_6um.png')) #plt.saveig()でグラフを保存 #これで別ディレクトリsave_dir内にグラフ'hoge.png'が保存された
 
 
 def Abs(x1,y1,y2,y3):
@@ -60,11 +61,10 @@ def Abs(x1,y1,y2,y3):
     plt.show()
     #fig.savefig(os.path.join(save_dir, '0910_A_PH3+water.png'))
 
-def Check(x1,y1,y2,y3):
-    #fig = plt.figure()
+def Check(x1,y1,x2,y2,fix):
     plt.plot(x1,y1,color='red',  linestyle='solid', linewidth = 2.0, label='original data')
-    plt.plot(x1,y2,color='black',  linestyle='solid', linewidth = 2.0, label='fixed data')
-    plt.plot(x1,y3,color='g',  linestyle='--', linewidth = 1.0, label='baseline')
+    plt.plot(x2,y2,color='black',  linestyle='solid', linewidth = 2.0, label='fixed data')
+    plt.plot(x2,fix,color='g',  linestyle='--', linewidth = 1.0, label='baseline')
     #plt.scatter(y2,y3)
     #plt.title('Potassium Hexacyanoferrate',fontsize=16)
     plt.xlabel('Wave Number [cm-1]',fontsize=16) 
@@ -74,4 +74,3 @@ def Check(x1,y1,y2,y3):
     plt.grid(color='b', linestyle='--', linewidth=0.2)
     plt.legend()
     plt.show()
-    #fig.savefig(os.path.join(save_dir, '0910_T_PH3+water.png')) #plt.saveig()でグラフを保存 #これで別ディレクトリsave_dir内にグラフ'hoge.png'が保存された

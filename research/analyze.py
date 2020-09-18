@@ -38,9 +38,9 @@ def Lorentz_fit(x1,y1):
     plot(x1,y1,fitline,y1)
 
 def fsr(x1,y1):
-    a, _ = find_peaks(y1, height=27, distance=50)
+    a, _ = find_peaks(y1, height=15, distance=270)
     # fsr value
-    fsr_value = x1[a[-1]]-x1[a[-2]]
+    fsr_value = x1[a[-2]]-x1[a[-3]]
     print(fsr_value)
     # Real cavity length [um]
     l = 1/(2*n_air*fsr_value*10**-4)

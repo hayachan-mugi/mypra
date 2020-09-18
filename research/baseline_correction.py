@@ -5,6 +5,7 @@ import numpy as np
 from scipy.sparse import csc_matrix
 from scipy.sparse import spdiags
 import scipy.sparse.linalg as spla
+import csv
 
 #パラメタを入力します、うまく推定ができないときはここをいじってください
 #AsLSでのベースライン推定は ( W(p) + lam*D'D )z = Wy のとき、重み p と罰則項の係数 lam がパラメタです
@@ -30,20 +31,31 @@ def baseline_als(y, lam, p, niter=10):
 
 
 #csvファイルと図を出力します
-def baseline(x,y1,y2,y3):
+def baseline(x,y_1,y_2,x1,y1,y2,y3):
 
     # baseline estimation
     bkg1 = baseline_als(y1,paramAsLS[0], paramAsLS[1])
-    fix1 = y1 - bkg1
+    z1 = np.polyfit(x1,bkg1,15)
+    fixr = np.poly1d(z1)
+    fix1 = fixr(x)
+    fix1 = y_1 - fix1
+    '''
+    #csvファイルとして保存
+    data = np.c_[x,h]
+    np.savetxt('Fixed_deg0.0_PH3_in_Water_T_14nmAu_6umSpacer_16scans_2.0cm.csv',data,delimiter=',')
+    '''
     bkg2 = baseline_als(y2,paramAsLS[0], paramAsLS[1])
-    fix2 = y2 - bkg2
+    z2 = np.polyfit(x1,bkg2,15)
+    fix = np.poly1d(z2)
+    fix2 = fix(x)
+    fix2 = y_2 - fix2
     bkg3 = baseline_als(y3,paramAsLS[0], paramAsLS[1])
     fix3 = y3 - bkg3
 
     input_data = input('if you input the [c] , you can check baseline correction. other = return the value : ')
     
     if input_data == 'c':
-        pl.Check(x,y3,fix3,bkg3)
+        pl.Check(x1,y1,x,fix1,fix)
     else :
         return x,fix1,fix2,fix3
     
