@@ -70,7 +70,10 @@ def reflective_index():
     return 1.0/(2.0*float(l)*float(fsr_solution)*10.0**-4.0)
 
 def polariton():
-    theta = np.arange(0,22,2)
+    y = []
+    y_ini = []
+    popt_ini = []
+    theta = []
     file = os.path.abspath('../../../../奈良先端大研究/yamada/20200915/polariton.csv')
     f = pd.read_csv(file,encoding='utf-8',names=('A', 'B', 'C'))
     X = f['A']
@@ -79,23 +82,25 @@ def polariton():
     x = np.array(X)
     y1 = np.array(Y1)
     y2 = np.array(Y2)
-    y3 = y2-y1
-    pini = np.array([E0])
-    popt1, pcov = scipy.optimize.curve_fit(ft.Lpolariton_fit, x, y1, p0=pini)
-    popt2, pcov = scipy.optimize.curve_fit(ft.Upolariton_fit, x, y2, p0=pini)
-    fitline1 = ft.Lpolariton_fit(x,popt1[0])
-    fitline2 = ft.Upolariton_fit(x,popt2[0])
-    print(popt1[0])
-    print(popt2[0])
-    L_cavity = ft.cavity_mode(theta,popt1[0])
-    U_cavity = ft.cavity_mode(theta,popt2[0])
+    y.append(y1)
+    y.append(y2)
+    y_ini.append(y1[0])
+    y_ini.append(y2[0])
+    pini = np.array(y_ini)
+    popt, pcov = scipy.optimize.curve_fit(ft.polariton_fit, x, y, p0=pini)
+    popt_ini.append(popt[0,0])
+    popt_ini.append(popt[1,0])
+    Rabi = ft.polariton_fit(x,popt_ini)
+    print(popt_ini)
+    El = ft.cavity_mode(x)
+    theta.append(x)
+    theta.append(x)
+
     
     #plot
     #fig = plt.figure()
-    plt.plot(theta,fitline1)
-    plt.plot(theta,fitline2)
-    plt.plot(theta,L_cavity)
-    plt.plot(theta,U_cavity)
+    plt.plot(theta,Rabi)
+    plt.plot(theta,El)
     plt.scatter(x,y1)
     plt.scatter(x,y2)
     plt.axhline(y = Ev, xmin=0,xmax=20)

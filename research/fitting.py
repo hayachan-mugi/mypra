@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 import plot as pl
 
+E0 = 2100.0
 E1 = 2115.0461 #absorption spectra
 n_ph3 = 1.448 #Reflective index
 
@@ -22,15 +23,16 @@ def Poly_fit(x,y):
     fix = fix(x)
     return fix
 
-def Lpolariton_fit(theta,E0):
-    E2 = cavity_mode(theta,E0)
-    sigma_L = (E1+E2)/2 - ((q)**2 + (E1-E2)**2)**(1/2)
-    return sigma_L
+def polariton_fit(theta,q):
+    E2 = cavity_mode(theta)
+    P=[]
+    q_split = np.split(q, 2)
+    P1 = (E1+E2)/2 - ((q_split[0])**2 + (E1-E2)**2)**(1/2)
+    P2 = (E1+E2)/2 + ((q_split[1])**2 + (E1-E2)**2)**(1/2)
+    P.append(P1)
+    P.append(P2)
 
-def Upolariton_fit(theta,E0):
-    E2 = cavity_mode(theta,E0)
-    sigma_U = (E1+E2)/2 + ((q)**2 + (E1-E2)**2)**(1/2)
-    return sigma_U
+    return P
 
-def cavity_mode(theta,E0):
+def cavity_mode(theta):
     return E0*((1-((1-np.cos(np.radians(2*theta)))/2)/n_ph3**2)**(-1/2))
