@@ -74,7 +74,7 @@ def polariton():
     y_ini = []
     popt_ini = []
     theta = []
-    file = os.path.abspath('../../../../奈良先端大研究/yamada/20200915/polariton.csv')
+    file = os.path.abspath('polariton.csv')
     f = pd.read_csv(file,encoding='utf-8',names=('A', 'B', 'C'))
     X = f['A']
     Y1 = f['B']
@@ -82,25 +82,27 @@ def polariton():
     x = np.array(X)
     y1 = np.array(Y1)
     y2 = np.array(Y2)
+    y3 = y2-y1
+    '''
     y.append(y1)
     y.append(y2)
     y_ini.append(y1[0])
     y_ini.append(y2[0])
-    pini = np.array(y_ini)
-    popt, pcov = scipy.optimize.curve_fit(ft.polariton_fit, x, y, p0=pini)
-    popt_ini.append(popt[0,0])
-    popt_ini.append(popt[1,0])
-    Rabi = ft.polariton_fit(x,popt_ini)
-    print(popt_ini)
+    '''
+    pini = np.array(y3[0])
+    popt1, pcov = scipy.optimize.curve_fit(ft.Lpolariton_fit, x, y1, p0=pini)
+    popt2, pcov = scipy.optimize.curve_fit(ft.Upolariton_fit, x, y2, p0=pini)
+    Rabi1 = ft.Lpolariton_fit(x,popt1)
+    Rabi2 = ft.Upolariton_fit(x,popt2)
     El = ft.cavity_mode(x)
-    theta.append(x)
-    theta.append(x)
+
 
     
     #plot
     #fig = plt.figure()
-    plt.plot(theta,Rabi)
-    plt.plot(theta,El)
+    plt.plot(x,Rabi1)
+    plt.plot(x,Rabi2)
+    plt.plot(x,El)
     plt.scatter(x,y1)
     plt.scatter(x,y2)
     plt.axhline(y = Ev, xmin=0,xmax=20)
