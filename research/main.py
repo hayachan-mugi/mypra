@@ -11,10 +11,11 @@ import os
 import pandas as pd
 import argparse
 from glob import glob
+import re
 
 i = 0
 
-def data_change(file):
+def data_change(f):
     #f = pd.read_csv(file,encoding='Shift-JIS')
     f.columns=list('XY')
 
@@ -41,6 +42,7 @@ def parse_args():
     parser.add_argument('-smooth', help='smoothing.py --smoothing deal')
     parser.add_argument('-anaLF', help='analyze.py --Lorentz_fit')
     parser.add_argument('-anaFSR', help='analyze.py --fsr')
+    parser.add_argument('-anaRABI', help='analyze.py --rabi_splitting')
     parser.add_argument('-anaN', help='analyze.py --reflective index')
     parser.add_argument('-plot', help='plot.py --only plot')
     parser.add_argument('-pola', help='plot.py --only plot')    
@@ -58,28 +60,41 @@ if __name__ == "__main__":
         exit()
     
     # MY PC
-    '''
+
     file_BG = os.path.abspath('../../../../奈良先端大研究/yamada/20200902/PH_in_Water/deg0_Abs_PH_in_water_CaF2_12umSpacer_16scans_2.0cm.csv')
     file_Solvent = os.path.abspath('../../../../奈良先端大研究/yamada/20200915/Water_T_14nmAu_6umSpacer_16scans_2.0cm.csv')
     file_Solute = os.path.abspath('../../../../奈良先端大研究/yamada/20200915/deg2.0_PH3_in_Water_T_14nmAu_6umSpacer_16scans_2.0cm.csv')
-    '''
+    file_deg_dir = sorted(glob('../../../../奈良先端大研究/yamada/20200915/deg*.0_PH3_in_Water_T_14nmAu_6umSpacer_16scans_2.0cm.csv'))
+
     # Lab
+    '''
     file_deg_dir = []
     file_BG = os.path.abspath('../../研究/yamada/20200915/Water_T_14nmAu_6umSpacer_16scans_2.0cm.csv')
     file_Solvent = os.path.abspath('../../研究/yamada/20200915/Water_T_14nmAu_6umSpacer_16scans_2.0cm.csv')
     file_Solute = os.path.abspath('../../研究/yamada/20200915/Water_T_14nmAu_6umSpacer_16scans_2.0cm.csv')
     file_deg_dir = sorted(glob('../../研究/yamada/20200915/deg*.0_PH3_in_Water_T_14nmAu_6umSpacer_16scans_2.0cm.csv'))
+    '''
+    # 角度変更用ファイル処理
     marge_csv = []
+    num = lambda val : int(re.sub("\\D", "", val))
+    file_deg_dir = sorted(file_deg_dir, key=num)
     for f in file_deg_dir:
 	    marge_csv.append(pd.read_csv(f, encoding='Shift-JIS'))
-    print(marge_csv[0])
+    x = []
+    y = []
+
+    for i in range(len(marge_csv)):
+        i = int(i)
+        a,b = data_change(marge_csv[i])
+        x.append(a)
+        y.append(b)
 
     f1 = pd.read_csv(file_BG,encoding='Shift-JIS')
     f2 = pd.read_csv(file_BG,encoding='Shift-JIS')
     f3 = pd.read_csv(file_BG,encoding='Shift-JIS')
-    x1,y1 = data_change(file_BG)
-    x2,y2 = data_change(file_Solvent)
-    x3,y3 = data_change(file_Solvent)
+    x1,y1 = data_change(f1)
+    x2,y2 = data_change(f2)
+    x3,y3 = data_change(f3)
 
 
     #change the range of data 
@@ -88,26 +103,39 @@ if __name__ == "__main__":
     #x3,y3 = x3[3132:3800],y3[3132:3800]
 
     #skip the data(10step)
+    '''
     fix_x1, fix_y1 = x1[::],y1[::]
     fix_x2, fix_y2 = x2[::],y2[::]
     fix_x3, fix_y3 = x3[::],y3[::]
+    '''
     #baseline correction
     #fix_x1,fix_y1,fix_y2,fix_y3 = bc.baseline(x1,y1,y2,fix_x1,fix_y1,fix_y2,fix_y3)
 
 
     #実行します
     
-    if args.anaLF:
-        ana.Lorentz_fit(fix_x2,fix_y2)
+    #if args.anaLF:
+    #    ana.Lorentz_fit(x2,y2)
     
     if args.anaFSR:
-        ana.fsr(fix_x3,fix_y3)
+        ana.fsr(x[3],y[3])
+    
+    if args.anaRABI:
+        for i in range(len(marge_csv)):
+            i = int(i)
+            x_L,x_U = ana.rabi_splitting(x[i],y[i],i*2)
+            
+            with open('result/notcoated_6um_pola.csv','a',newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow([i*2,x_L,x_U])
+            
     
     if args.plot:
-        pl.Trans(fix_x1,fix_y1,fix_y2,fix_y3)
+        pl.Trans(x1,y1,y2,y3)
     
     if args.pola:
-        ana.polariton()
+        Omega = ana.polariton()
+        print('Omega = {0}'.format(Omega))
 
     '''
     if args.smooth:

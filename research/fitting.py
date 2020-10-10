@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 import plot as pl
 
-E0 = 2095.0 #透過率の等しいデータを採用
+E0 = 2104.2 #透過率の等しいデータを採用
 E1 = 2115.0461 #absorption spectra
-n_ph3 = 1.448 #Reflective index
+n_ph3 = 1.5 #Reflective index
 
 
 def gauss_func(x, a, mu, sigma):

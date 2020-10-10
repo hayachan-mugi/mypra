@@ -15,7 +15,7 @@ import csv
 save_dir = '../../../../奈良先端大研究/M1/週報/10月' #PC
 
 #initial value
-HWHM = 1
+HWHM = 1.5
 n_air = 1.002
 n_water = 1.3330
 h = 6.62607*10.0**-34
@@ -50,18 +50,37 @@ def Lorentz_fit(x1,y1):
     # フィッティング曲線描画用の配列を作成
     fitline = ft.Lorentz_func(x1, popt[0], popt[1], popt[2])
     plot(x1,y1,fitline,y1)
+    print(popt[1])
+    return popt[1]
 
 def fsr(x1,y1):
-    a, _ = find_peaks(y1, height=0.2, distance=40)
+    a, _ = find_peaks(y1, height=0.3, distance=70)
     # fsr value
-    fsr_value = x1[a[-1]]-x1[a[-2]]
+    fsr_value = x1[a[1]]-x1[a[0]]
     print('FSR = ',fsr_value)
-    print(x1[a[0]],x1[a[1]])
+    #print(x1[a[0]],x1[a[1]])
     # Real cavity length [um]
     #l = 1/(2*n_ph3*fsr_value*10**-4)
     #print('Real cavity length (vacant) :',l)
     plot(x1,y1,x1[a],y1[a])
 
+def rabi_splitting(x1,y1,i):
+    a, _ = find_peaks(y1, height=0.3, distance=70)
+    if i == 0:
+        x_U = x1[a[1]]
+        #x_L = x1[a[0]-20:a[0]+120]
+        #y_L = y1[a[0]-20:a[0]+120]
+        #x_U = x1[a[1]-15:a[1]+60]
+        #y_U = y1[a[1]-15:a[1]+60]
+        #x_L = Lorentz_fit(x_L,y_L)
+        #x_U = Lorentz_fit(x_U,y_U)
+        a, _ = find_peaks(y1, height=0.58, distance=10)
+        x_L = x1[a[1]]
+        return x_L,x_U
+    else :
+        x_L = x1[a[0]]
+        x_U = x1[a[1]]
+        return x_L,x_U
 
 
 def reflective_index():
@@ -74,7 +93,7 @@ def polariton():
     y_ini = []
     popt_ini = []
     theta = []
-    file = os.path.abspath('polariton.csv')
+    file = os.path.abspath('result/notcoated_6um_pola.csv')
     f = pd.read_csv(file,encoding='utf-8',names=('A', 'B', 'C'))
     X = f['A']
     Y1 = f['B']
@@ -112,9 +131,10 @@ def polariton():
     plt.xlim()
     plt.ylim()
     plt.grid(color='b', linestyle='--', linewidth=0.2)
-    plt.legend()
     plt.show()
     #fig.savefig(os.path.join(save_dir, 'not_coated_cavity_polariton_6um.png'))
+
+    return y2[4]-y1[4]
 
 
 
