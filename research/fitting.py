@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 import plot as pl
 
-E0 = 2104.2 #透過率の等しいデータを採用
-E1 = 2115.0461 #absorption spectra
-n_ph3 = 1.381830294732613 #Reflective index
+#E0 = 2108.5 #透過率の等しいデータを採用
+Em = 2111.0461 #absorption spectra
+#n_ph3 = 1.383 #Reflective index
 
 
 def gauss_func(x, a, mu, sigma):
@@ -23,19 +23,30 @@ def Poly_fit(x,y):
     fix = fix(x)
     return fix
 
-def Lpolariton_fit(theta,q):
+def polariton_fit(theta,q,n_ph3,E0,Em):
 
-    E2 = cavity_mode(theta)
-    P1 = (E1+E2)/2 - (((q)**2 + (E1-E2)**2)**(1/2))/2
+    E2 = cavity_mode(theta,n_ph3,E0)
+    P1 = (Em+E2)/2 - (((q)**2 + (Em-E2)**2)**(1/2))/2
+    P2 = (Em+E2)/2 + (((q)**2 + (Em-E2)**2)**(1/2))/2
+    P = P1+P2
+    P.reshape(1,len(P))
+    
+    return P
+
+def Lpolariton_fit(theta,q,n_ph3,E0,Em):
+
+    E2 = cavity_mode(theta,n_ph3,E0)
+    P1 = (Em+E2)/2 - (((q)**2 + (Em-E2)**2)**(1/2))/2
 
     return P1
 
-def Upolariton_fit(theta,q):
+def Upolariton_fit(theta,q,n_ph3,E0,Em):
 
-    E2 = cavity_mode(theta)
-    P2 = (E1+E2)/2 + (((q)**2 + (E1-E2)**2)**(1/2))/2
+    E2 = cavity_mode(theta,n_ph3,E0)
+    P2 = (Em+E2)/2 + (((q)**2 + (Em-E2)**2)**(1/2))/2
 
     return P2
 
-def cavity_mode(theta):
-    return E0*((1-((1-np.cos(np.radians(2*theta)))/2)/(n_ph3**2))**(-1/2))
+def cavity_mode(theta,n_ph3,E0):
+
+    return E0*((1-(((1-np.cos(np.radians(2*theta)))/2)/(n_ph3**2)))**(-1/2))

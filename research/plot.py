@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import os
 import numpy as np
 
-#save_dir = '../../研究/M1/週報/9月/' #Lab
-save_dir = '../../../../奈良先端大研究/M1/週報/10月' #PC
+save_dir = '../../研究/M1/週報/10月/' #Lab
+#save_dir = '../../../../奈良先端大研究/M1/週報/10月' #PC
 
 def Single(x1,y1,y2,y3):
     #fig = plt.figure()
@@ -21,7 +21,7 @@ def Single(x1,y1,y2,y3):
 
 def Trans(x,y1,y2,y3):
     #fig = plt.figure()
-    plt.plot(x,y1,color='black',  linestyle='solid', linewidth = 2.0, label='6um spacer')
+    plt.plot(x,y1,color='black',  linestyle='solid', linewidth = 2.0, label='8.0 [deg]')
     input_data = input('if you input the [f] , you can get fitting graph. other = fsr graph : ')
     
     if input_data == 'f':
@@ -29,15 +29,15 @@ def Trans(x,y1,y2,y3):
         plt.plot(x,y3,color='b',  linestyle='solid', linewidth = 2.0, label='8fitting data')
     else :
         plt.scatter(y2,y3)
-    plt.title('Potassium Hexacyanoferrate',fontsize=16)
-    plt.xlabel('Wave Number [cm-1]',fontsize=16) 
-    plt.ylabel('Transmittance [%]',fontsize=16) 
+    plt.title('Potassium Hexacyanoferrate(3)',fontsize=19)
+    plt.xlabel('Wave Number [cm-1]',fontsize=19) 
+    plt.ylabel('Transmittance [%]',fontsize=19) 
     plt.xlim()
     plt.ylim()
     plt.grid(color='b', linestyle='--', linewidth=0.2)
-    plt.legend()
+    plt.legend(bbox_to_anchor=(1, 1), loc='upper right', borderaxespad=1, fontsize=18)
     plt.show()
-    #fig.savefig(os.path.join(save_dir, '0915_Rabi_6um.png')) #plt.saveig()でグラフを保存 #これで別ディレクトリsave_dir内にグラフ'hoge.png'が保存された
+    #fig.savefig(os.path.join(save_dir, 'notcoated_deg8.0_6um.png')) #plt.saveig()でグラフを保存 #これで別ディレクトリsave_dir内にグラフ'hoge.png'が保存された
 
 
 def Abs(x1,y1,y2,y3):

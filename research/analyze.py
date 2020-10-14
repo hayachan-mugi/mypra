@@ -11,20 +11,20 @@ import os
 import pandas as pd
 import csv
 
-#save_dir = '../../研究/M1/週報/9月/' #Lab
-save_dir = '../../../../奈良先端大研究/M1/週報/10月' #PC
+save_dir = '../../研究/M1/週報/10月/' #Lab
+#save_dir = '../../../../奈良先端大研究/M1/週報/10月' #PC
 
 #initial value
 HWHM = 1.5
 n_air = 1.002
 n_water = 1.3330
-n_ph3 = 1.448
+n_ph3 = 1.57
 h = 6.62607*10.0**-34
 e = 1.6*10.0**-19
 c = 2.9972*10**8
 Lc = 6.71*10**-4
-E0 = 2100.0 # cavity mode
-Ev = 2115.0461 # sample absorption
+E0 = 2108.0 # cavity mode
+Em = 2115.0 # sample absorption
 
 def Lorentz_fit(x1,y1):
     max_y = max(y1)
@@ -55,8 +55,10 @@ def Lorentz_fit(x1,y1):
     return popt[1]
 
 def fsr(x1,y1):
-    a, _ = find_peaks(y1, height=12, distance=90)
+    a, _ = find_peaks(y1, height=0.3, distance=50)
     # fsr value
+    #b = x1[max(y1)]
+    #print(b)
     fsr_value = x1[a[1]]-x1[a[0]]
     print('FSR = ',fsr_value)
     print(x1[a[0]],x1[a[1]])
@@ -66,7 +68,7 @@ def fsr(x1,y1):
     plot(x1,y1,x1[a],y1[a])
 
 def rabi_splitting(x1,y1,i):
-    a, _ = find_peaks(y1, height=0.1, distance=90)
+    a, _ = find_peaks(y1, height=0.19, distance=90)
     if i == 0:
         x_U = x1[a[1]]
         #x_L = x1[a[0]-20:a[0]+120]
@@ -91,10 +93,7 @@ def reflective_index():
 
 def polariton():
     y = []
-    y_ini = []
-    popt_ini = []
-    theta = []
-    file = os.path.abspath('result/100nmSiO2_6um_pola.csv')
+    file = os.path.abspath('result/notcoated_6um_pola.csv')
     f = pd.read_csv(file,encoding='utf-8',names=('A', 'B', 'C'))
     X = f['A']
     Y1 = f['B']
@@ -109,33 +108,43 @@ def polariton():
     y_ini.append(y1[0])
     y_ini.append(y2[0])
     '''
-    pini = np.array(y3[0])
-    popt1, pcov = scipy.optimize.curve_fit(ft.Lpolariton_fit, x, y1, p0=pini)
-    popt2, pcov = scipy.optimize.curve_fit(ft.Upolariton_fit, x, y2, p0=pini)
-    Rabi1 = ft.Lpolariton_fit(x,popt1)
-    Rabi2 = ft.Upolariton_fit(x,popt2)
-    El = ft.cavity_mode(x)
+    y = y1+y2
+    y.reshape(1,len(y))
+
+    pini = np.array([y3[0],n_ph3,E0,Em]) #Parameter Rabispitting,matter Spectra() 
+    popt1, pcov = scipy.optimize.curve_fit(ft.polariton_fit, x, y, p0=pini, bounds=([40.,1.3,2090.,2090.],[80.,1.8,2120.,2120.]))
+    #popt2, pcov = scipy.optimize.curve_fit(ft.Upolariton_fit, x, y2, p0=pini)
+    x1 = np.arange(-30, 31, 1)
+    Rabi_L = ft.Lpolariton_fit(x1,popt1[0],popt1[1],popt1[2],popt1[3])
+    Rabi_U = ft.Upolariton_fit(x1,popt1[0],popt1[1],popt1[2],popt1[3])
+    El = ft.cavity_mode(x1,n_ph3,popt1[2])
+    #print(pcov[0],pcov[1],pcov[2],pcov[3])
+    perr = np.sqrt(np.diag(pcov[1]))
+    print(perr)
+    print(popt1[0],popt1[1],popt1[2],popt1[3])
 
 
     
     #plot
-    #fig = plt.figure()
-    plt.plot(x,Rabi1)
-    plt.plot(x,Rabi2)
-    plt.plot(x,El)
+    fig = plt.figure()
+    plt.plot(x1,Rabi_L, label='LP')
+    plt.plot(x1,Rabi_U, label='UP')
+    plt.plot(x1,El, label='Cavity mode')
     plt.scatter(x,y1)
     plt.scatter(x,y2)
-    plt.axhline(y = Ev, xmin=0,xmax=20)
-    plt.title('Potassium Hexacyanoferrate(3)',fontsize=16)
-    plt.xlabel('Angle [deg]',fontsize=16) 
-    plt.ylabel('Wave number [cm-1]',fontsize=16) 
+    plt.axhline(y = popt1[3], xmin=0,xmax=20, label='Absorption spectra')
+    plt.title('Potassium Hexacyanoferrate(3)',fontsize=19)
+    plt.xlabel('Angle [deg]',fontsize=19) 
+    plt.ylabel('Wave number [cm-1]',fontsize=19)
+    plt.text(0.8, 80, '57.85400000000027 1.577594526556183 2105.165651139043 2111.0643234273452', va='bottom')
     plt.xlim()
     plt.ylim()
     plt.grid(color='b', linestyle='--', linewidth=0.2)
+    plt.legend(bbox_to_anchor=(1, 1), loc='upper right', borderaxespad=1, fontsize=10)
     plt.show()
-    #fig.savefig(os.path.join(save_dir, 'not_coated_cavity_polariton_6um.png'))
+    fig.savefig(os.path.join(save_dir, 'not_coated_cavity_polariton_6um.png'))
 
-    return y2[4]-y1[4]
+    return y2[3]-y1[3]
 
 
 

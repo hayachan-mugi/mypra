@@ -30,7 +30,7 @@ def data_change(f):
     y = [float(s) for s in y]
     x = np.array(x)
     y = np.array(y)
-    #x,y = x[2900:3800],y[2900:3800]
+    x,y = x[2900:3800],y[2900:3800]
     return x,y
 
 def parse_args():
@@ -68,8 +68,8 @@ if __name__ == "__main__":
     
     file_BG = os.path.abspath('../../研究/yamada/20201011/vacant_T_14nmAu_100nmSiO2_25umSpacer_16scans_2.0cm.csv')
     file_Solvent = os.path.abspath('../../研究/yamada/20201011/not_coated/Water_T_14nmAu_25umSpacer_16scans_2.0cm.csv')
-    file_Solute = os.path.abspath('../../研究/yamada/20201011/not_coated_2/deg0.0_PH3_in_Water_T_14nmAu_25umSpacer_16scans_2.0cm.csv')
-    file_deg_dir = sorted(glob('../../研究/yamada/20201006/deg*.0_PH3_in_Water_T_14nmAu_100nmSiO2_6umSpacer_16scans_2.0cm.csv'))
+    file_Solute = os.path.abspath('../../研究/yamada/20201011/deg0.0_PH3_in_Water_T_14nmAu_100nmSiO2_25umSpacer_Koi_16scans_2.0cm.csv')
+    file_deg_dir = sorted(glob('../../研究/yamada/20200915/deg*.0_PH3_in_Water_T_14nmAu_6umSpacer_16scans_2.0cm.csv'))
     
     # 角度変更用ファイル処理
     marge_csv = []
@@ -115,10 +115,10 @@ if __name__ == "__main__":
     #    ana.Lorentz_fit(x2,y2)
     
     if args.anaFSR:
-        ana.fsr(x3,y3)
+        ana.fsr(x[4],y[4])
     
     if args.anaRABI:
-        for i in range(len(marge_csv)):
+        for i in range(len(marge_csv)-4):
             i = int(i)
             x_L,x_U = ana.rabi_splitting(x[i],y[i],i*2)
             
