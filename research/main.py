@@ -58,19 +58,19 @@ if __name__ == "__main__":
         exit()
     
     # MY PC
-    '''
+    
     file_BG = os.path.abspath('../../../../奈良先端大研究/yamada/20200902/PH_in_Water/deg0_Abs_PH_in_water_CaF2_12umSpacer_16scans_2.0cm.csv')
     file_Solvent = os.path.abspath('../../../../奈良先端大研究/yamada/20200915/Water_T_14nmAu_6umSpacer_16scans_2.0cm.csv')
     file_Solute = os.path.abspath('../../../../奈良先端大研究/yamada/20200915/deg2.0_PH3_in_Water_T_14nmAu_6umSpacer_16scans_2.0cm.csv')
     file_deg_dir = sorted(glob('../../../../奈良先端大研究/yamada/20200915/deg*.0_PH3_in_Water_T_14nmAu_6umSpacer_16scans_2.0cm.csv'))
-    '''
-    # Lab
     
+    # Lab
+    '''
     file_BG = os.path.abspath('../../研究/yamada/20201011/vacant_T_14nmAu_100nmSiO2_25umSpacer_16scans_2.0cm.csv')
     file_Solvent = os.path.abspath('../../研究/yamada/20201011/not_coated/Water_T_14nmAu_25umSpacer_16scans_2.0cm.csv')
     file_Solute = os.path.abspath('../../研究/yamada/20201011/deg0.0_PH3_in_Water_T_14nmAu_100nmSiO2_25umSpacer_Koi_16scans_2.0cm.csv')
     file_deg_dir = sorted(glob('../../研究/yamada/20200915/deg*.0_PH3_in_Water_T_14nmAu_6umSpacer_16scans_2.0cm.csv'))
-    
+    '''
     # 角度変更用ファイル処理
     marge_csv = []
     num = lambda val : int(re.sub("\\D", "", val))
@@ -93,18 +93,6 @@ if __name__ == "__main__":
     x2,y2 = data_change(f2)
     x3,y3 = data_change(f3)
 
-
-    #change the range of data 
-    #x1,y1 = x1[2510:5208],y1[2510:5208]
-    #x2,y2 = x2[2510:5208],y2[2510:5208]
-    #x3,y3 = x3[3132:3800],y3[3132:3800]
-
-    #skip the data(10step)
-    '''
-    fix_x1, fix_y1 = x1[::],y1[::]
-    fix_x2, fix_y2 = x2[::],y2[::]
-    fix_x3, fix_y3 = x3[::],y3[::]
-    '''
     #baseline correction
     #fix_x1,fix_y1,fix_y2,fix_y3 = bc.baseline(x1,y1,y2,fix_x1,fix_y1,fix_y2,fix_y3)
 
@@ -115,7 +103,7 @@ if __name__ == "__main__":
     #    ana.Lorentz_fit(x2,y2)
     
     if args.anaFSR:
-        ana.fsr(x[4],y[4])
+        ana.fsr(x2,y2)
     
     if args.anaRABI:
         for i in range(len(marge_csv)-4):

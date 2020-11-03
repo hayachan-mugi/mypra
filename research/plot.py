@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import os
 import numpy as np
 
-save_dir = '../../研究/M1/週報/10月/' #Lab
-#save_dir = '../../../../奈良先端大研究/M1/週報/10月' #PC
+#save_dir = '../../研究/M1/週報/10月/' #Lab
+save_dir = '../../../../奈良先端大研究/M1/月報/10月' #PC
 
 def Single(x1,y1,y2,y3):
     #fig = plt.figure()
@@ -20,7 +20,7 @@ def Single(x1,y1,y2,y3):
     #fig.savefig(os.path.join(save_dir, '0910_S_PH3+water.png'))
 
 def Trans(x,y1,y2,y3):
-    #fig = plt.figure()
+    fig = plt.figure()
     plt.plot(x,y1,color='black',  linestyle='solid', linewidth = 2.0, label='8.0 [deg]')
     input_data = input('if you input the [f] , you can get fitting graph. other = fsr graph : ')
     
@@ -35,9 +35,9 @@ def Trans(x,y1,y2,y3):
     plt.xlim()
     plt.ylim()
     plt.grid(color='b', linestyle='--', linewidth=0.2)
-    plt.legend(bbox_to_anchor=(1, 1), loc='upper right', borderaxespad=1, fontsize=18)
+    plt.legend()
     plt.show()
-    #fig.savefig(os.path.join(save_dir, 'notcoated_deg8.0_6um.png')) #plt.saveig()でグラフを保存 #これで別ディレクトリsave_dir内にグラフ'hoge.png'が保存された
+    fig.savefig(os.path.join(save_dir, 'notcoated_deg8.0_6um.png')) #plt.saveig()でグラフを保存 #これで別ディレクトリsave_dir内にグラフ'hoge.png'が保存された
 
 
 def Abs(x1,y1,y2,y3):
